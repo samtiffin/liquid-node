@@ -31,6 +31,11 @@ module.exports =
     render('123last', '{% for item in array %}{{forloop.index}}{% if forloop.last%}last{% endif %}{% endfor %}', array: [1,2,3])
     render('vw', '{%for item in array limit:2%}{{item}}{%endfor%}', array: ['v','w','x','y'])
     render('xy', '{%for item in array offset:2%}{{item}}{%endfor%}', array: ['v','w','x','y'])
+    render('121', "{%for item in array%}{% cycle '1', '2' %}{%endfor%}", array: [1,2,3])
+    render('123', "{%for item in array%}{% cycle '1', '2', '3' %}{%endfor%}", array: [1,2,3])
+    render('abab', "{%for item in array%}{% cycle 'a', 'b' %}{%endfor%}", array: [1,2,3,4])
+    render('a', "{%for item in array%}{% cycle '', 'a' %}{%endfor%}", array: [1,2,3])
+    render('aa', "{%for item in array%}{% cycle 'a', '' %}{%endfor%}", array: [1,2,3])
 
   test_ifchanged: renderTest (render, assert) ->
     render('123', '{%for item in array%}{%ifchanged%}{{item}}{% endifchanged %}{%endfor%}', array: [ 1, 1, 2, 2, 3, 3 ])

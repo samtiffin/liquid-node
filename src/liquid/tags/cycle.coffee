@@ -1,4 +1,5 @@
 Liquid = require "../../liquid"
+util = require 'util'
 
 # Cycle is usually used within a loop to alternate between values, like colors or DOM classes.
 #
@@ -13,18 +14,27 @@ Liquid = require "../../liquid"
 #    <div class="green"> Item five</div>
 #
 module.exports = class Cycle extends Liquid.Block
-  Syntax = ///^#{Liquid.QuotedFragment.source}+///
-  NamedSyntax = ///^(#{Liquid.QuotedFragment.source})\s*\:\s*(.*)///
+  Syntax      = ///^#{Liquid.QuotedFragment.source}///g
   SyntaxHelp = "Syntax Error in 'cycle' - Valid syntax: cycle 'a', 'b'"
 
   constructor: (tagName, markup, token) ->
-    if match = Syntax.exec(markup)
-      console.log match
-    else if match = NamedSyntax.exec(markup)
-      console.log match
+    match = markup.match(Syntax)
+    if match
+      @variables = match.filter((v)->v)
+      @name = match.toString()
     else
       throw new Liquid.SyntaxError(SyntaxHelp)
 
   render: (context) ->
+    context.registers.cycle or= {}
+
+    context.stack =>
+      key = context.get(@name)
+      iteration = context.registers['cycle'][key] or 0
+      result = context.get(@variables[iteration])
+      iteration += 1
+      iteration = 0 if iteration >= @variables.length
+      context.registers['cycle'][key] = iteration
+      result
 
 Liquid.Template.registerTag 'cycle', Cycle
