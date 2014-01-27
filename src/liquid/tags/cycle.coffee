@@ -15,11 +15,17 @@ util = require 'util'
 #
 module.exports = class Cycle extends Liquid.Block
   Syntax      = ///^#{Liquid.QuotedFragment.source}///g
-  SyntaxHelp = "Syntax Error in 'cycle' - Valid syntax: cycle 'a', 'b'"
+  NamedSyntax = ///^(#{Liquid.QuotedFragment.source})\s*\:\s*(.*)///g
+  SyntaxHelp  = "Syntax Error in 'cycle' - Valid syntax: cycle 'a', 'b'"
 
   constructor: (tagName, markup, token) ->
     match = markup.match(Syntax)
-    if match
+    namedMatch = markup.match(NamedSyntax)
+
+    if namedMatch
+      @name = match[0]
+      @variables = match.slice(2).filter((v)->v)
+    else if match
       @variables = match.filter((v)->v)
       @name = match.toString()
     else
