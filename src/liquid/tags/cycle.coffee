@@ -1,5 +1,5 @@
 Liquid = require "../../liquid"
-util = require 'util'
+Q = require "q"
 
 # Cycle is usually used within a loop to alternate between values, like colors or DOM classes.
 #
@@ -33,6 +33,8 @@ module.exports = class Cycle extends Liquid.Block
 
   render: (context) ->
     context.registers.cycle or= {}
+
+    super(context)
 
     context.stack =>
       key = context.get(@name)

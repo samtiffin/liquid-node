@@ -37,6 +37,7 @@ module.exports =
     render('a', "{%for item in array%}{% cycle '', 'a' %}{%endfor%}", array: [1,2,3])
     render('aa', "{%for item in array%}{% cycle 'a', '' %}{%endfor%}", array: [1,2,3])
     render('aabbcc', "{% for item in array %}{% cycle 'test1': 'a', 'b', 'c' %}{% cycle 'test2': 'a', 'b', 'c' %}{% endfor %}", array: [1,2,3])
+    render('112211', "{% assign a = 1 %}{%for item in array%}{% cycle a : a, '2' %}{% cycle 1 : a, '2' %}{%endfor%}", array: [1,2,3])
 
   test_ifchanged: renderTest (render, assert) ->
     render('123', '{%for item in array%}{%ifchanged%}{{item}}{% endifchanged %}{%endfor%}', array: [ 1, 1, 2, 2, 3, 3 ])
